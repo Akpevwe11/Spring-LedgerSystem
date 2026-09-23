@@ -1,0 +1,21 @@
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+### IDE ###
+*.iws
+*.iml
+*.ipr
+.idea/workspace.xml
+.idea/libraries/
+.idea/httpRequests/
+.idea/shelf/
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/dataSources/
+out/
+
+### OS ###
+.DS_Store
+
+### Logs ###
+*.log
