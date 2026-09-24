@@ -8,6 +8,7 @@ import com.example.ledger.exception.AccountNotFoundException;
 import com.example.ledger.exception.DuplicateAccountNumberException;
 import com.example.ledger.exception.GlobalExceptionHandler;
 import com.example.ledger.service.AccountService;
+import com.example.ledger.service.BalanceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -32,7 +33,7 @@ class AccountControllerTest {
     @BeforeEach
     void setUp() {
         accountService = new FakeAccountService();
-        mockMvc = MockMvcBuilders.standaloneSetup(new AccountController(accountService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new AccountController(accountService, unusedBalanceService()))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
@@ -126,5 +127,9 @@ class AccountControllerTest {
         public List<Account> list() {
             return listHandler.get();
         }
+    }
+
+    private static BalanceService unusedBalanceService() {
+        return new BalanceService(null, null);
     }
 }

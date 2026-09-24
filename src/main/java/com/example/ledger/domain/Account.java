@@ -31,7 +31,7 @@ public class Account {
     @Column(name = "account_number", nullable = false, unique = true, length = 34)
     private String accountNumber;
 
-    @Column(nullable = false, length = 3, columnDefinition = "char(3)")
+    @Column(nullable = false, length = 3)
     private String currency;
 
     @Enumerated(EnumType.STRING)

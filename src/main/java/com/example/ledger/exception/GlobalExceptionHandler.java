@@ -3,6 +3,7 @@ package com.example.ledger.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -12,11 +13,11 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    ProblemDetail handleNotFound(AccountNotFoundException ex) {
+    @ExceptionHandler({AccountNotFoundException.class, JournalEntryNotFoundException.class})
+    ProblemDetail handleNotFound(RuntimeException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setTitle("Account not found");
-        problem.setType(URI.create("https://ledger.example/problems/account-not-found"));
+        problem.setTitle("Resource not found");
+        problem.setType(URI.create("https://ledger.example/problems/not-found"));
         return problem;
     }
 
@@ -25,6 +26,22 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         problem.setTitle("Duplicate account number");
         problem.setType(URI.create("https://ledger.example/problems/duplicate-account-number"));
+        return problem;
+    }
+
+    @ExceptionHandler({UnbalancedEntryException.class, AccountNotActiveException.class, InvalidJournalEntryException.class})
+    ProblemDetail handleUnprocessable(RuntimeException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        problem.setTitle("Unprocessable journal entry");
+        problem.setType(URI.create("https://ledger.example/problems/unprocessable-entry"));
+        return problem;
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    ProblemDetail handleMissingHeader(MissingRequestHeaderException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problem.setTitle("Missing request header");
+        problem.setType(URI.create("https://ledger.example/problems/missing-header"));
         return problem;
     }
 

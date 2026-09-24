@@ -19,3 +19,11 @@ spring:
 
 server:
   port: ${SERVER_PORT:8080}
+
+springdoc:
+  override-with-generic-response: false
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
